@@ -27,7 +27,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = env("DJANGO_SECRET_KEY")
+SECRET_KEY = env("DOCKER_COMPOSE_DJANGO_SECRET_KEY") 
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = env.bool("DJANGO_DEBUG")
@@ -76,6 +76,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'allauth.account.middleware.AccountMiddleware',
 ]
 
 ROOT_URLCONF = 'config.urls'
@@ -107,13 +108,11 @@ WSGI_APPLICATION = 'config.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'postgres',
-        'USER': 'postgres',
-        'PASSWORD': 'postgres',
-        'HOST': 'db',
-        'PORT': 5432
-        # 'ENGINE': 'django.db.backends.sqlite3',
-        # 'NAME': BASE_DIR / 'db.sqlite3',
+        'NAME': env.str('POSTGRES_DB', 'postgres'),
+        'USER': env.str('POSTGRES_USER', 'postgres'),
+        'PASSWORD': env.str('POSTGRES_PASSWORD', 'postgres'),
+        'HOST': env.str('POSTGRES_HOST', 'db'),
+        'PORT': env.int('POSTGRES_PORT', 5432),
     }
 }
 
@@ -198,5 +197,3 @@ CRISPY_TEMPLATE_PACK = 'bootstrap4'
 MESSAGE_TAGS = {
     messages.ERROR: 'danger',
 }
-
-ZARINPAL_MERCHANT_ID = env("DJANGO_ZARINPAL_MERCHANT_ID")

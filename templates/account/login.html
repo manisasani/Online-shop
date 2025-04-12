@@ -1,17 +1,116 @@
 {% extends '_base.html' %}
-
+{% load static %}
 {% load crispy_forms_tags %}
 
-{% block page_title %}
-    Login
-{% endblock %}
+{% block page_title %}ورود{% endblock %}
 
 {% block content %}
-    <h1>Log In</h1>
+<div class="min-h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+    <div class="max-w-md w-full">
+        <!-- Header -->
+        <div class="text-center mb-8">
+            <h2 class="text-3xl font-extrabold text-gray-900 mb-2">
+                خوش آمدید
+            </h2>
+            <p class="text-sm text-gray-600">
+                حساب کاربری ندارید؟
+                <a href="{% url 'account_signup' %}" class="font-medium text-purple-600 hover:text-purple-500">
+                    ثبت نام کنید
+                </a>
+            </p>
+        </div>
 
-    <form action="" method="post">
-        {% csrf_token %}
-        {{ form|crispy }}
-        <input type="submit" value="Log In">
-    </form>
+        <!-- Login Form -->
+        <div class="bg-white py-8 px-4 shadow-sm rounded-2xl sm:px-10">
+            <form method="POST" class="space-y-6">
+                {% csrf_token %}
+
+                {% if form.errors %}
+                <div class="rounded-lg bg-red-50 p-4 text-sm text-red-500">
+                    {{ form.errors }}
+                </div>
+                {% endif %}
+
+                <!-- Email -->
+                <div>
+                    <label for="email" class="block text-sm font-medium text-gray-700">
+                        ایمیل
+                    </label>
+                    <div class="mt-1">
+                        <input type="email" name="login" required
+                               class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-lg placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent sm:text-sm"
+                               placeholder="example@email.com">
+                    </div>
+                </div>
+
+                <!-- Password -->
+                <div>
+                    <label for="password" class="block text-sm font-medium text-gray-700">
+                        رمز عبور
+                    </label>
+                    <div class="mt-1">
+                        <input type="password" name="password" required
+                               class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-lg placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent sm:text-sm"
+                               placeholder="••••••••">
+                    </div>
+                </div>
+
+                <!-- Remember Me -->
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center">
+                        <input type="checkbox" name="remember" id="remember"
+                               class="h-4 w-4 text-purple-600 focus:ring-purple-500 border-gray-300 rounded">
+                        <label for="remember" class="mr-2 block text-sm text-gray-700">
+                            مرا به خاطر بسپار
+                        </label>
+                    </div>
+
+                    <div class="text-sm">
+                        <a href="{% url 'account_reset_password' %}" class="font-medium text-purple-600 hover:text-purple-500">
+                            رمز عبور را فراموش کرده‌اید؟
+                        </a>
+                    </div>
+                </div>
+
+                <div>
+                    <button type="submit"
+                            class="w-full flex justify-center py-2 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-gradient-to-r from-purple-600 to-purple-700 hover:from-purple-700 hover:to-purple-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500">
+                        ورود به حساب کاربری
+                    </button>
+                </div>
+            </form>
+
+            <!-- Social Login -->
+            <div class="mt-6">
+                <div class="relative">
+                    <div class="absolute inset-0 flex items-center">
+                        <div class="w-full border-t border-gray-300"></div>
+                    </div>
+                    <div class="relative flex justify-center text-sm">
+                        <span class="px-2 bg-white text-gray-500">
+                            یا ورود با
+                        </span>
+                    </div>
+                </div>
+
+                <div class="mt-6 grid grid-cols-2 gap-3">
+                    <div>
+                        <a href="#"
+                           class="w-full inline-flex justify-center py-2 px-4 border border-gray-300 rounded-lg shadow-sm bg-white text-sm font-medium text-gray-500 hover:bg-gray-50">
+                            <img class="h-5 w-5" src="{% static 'img/google.svg' %}" alt="Google">
+                            <span class="mr-2">گوگل</span>
+                        </a>
+                    </div>
+                    <div>
+                        <a href="#"
+                           class="w-full inline-flex justify-center py-2 px-4 border border-gray-300 rounded-lg shadow-sm bg-white text-sm font-medium text-gray-500 hover:bg-gray-50">
+                            <img class="h-5 w-5" src="{% static 'img/github.svg' %}" alt="GitHub">
+                            <span class="mr-2">گیت‌هاب</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 {% endblock %}

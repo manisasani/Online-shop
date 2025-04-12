@@ -1,29 +1,55 @@
 {% load static %}
 
-<!-- Footer Start-->
-<footer class="footer">
-    <div class="footer-top bg-color ptb--50" data-bg-color="#f6f6f6">
-        <div class="container">
-            <div class="row justify-content-center">
-                <div class="col-lg-9 text-center">
-                    <div class="footer-widget mb--50">
-                        <div class="textwidget">
-                            <img src="{% static 'img/codingyar_logo.png' %}" alt="Logo">
-                        </div>
-                    </div>
-                    <div class="footer-widget mb--50 pb--1">
-                        <ul class="footer-menu">
-                            <li><a href="">درباره ما</a></li>
-                            <li><a href="">قوانین و مقررات</a></li>
-                            <li><a href="">تماس با ما</a></li>
-                        </ul>
-                    </div>
-                    <div class="footer-widget">
-                        Codingyar.com © | all rights reserved
-                    </div>
+<footer class="bg-gray-50 pt-16 pb-12 mt-20 border-t border-gray-100">
+    <div class="container">
+        <!-- Main Footer Content -->
+        <div class="grid grid-cols-1 gap-8 mb-12">
+            <div class="text-center">
+                <!-- Logo -->
+                <div class="mb-8">
+                    <img src="{% static 'img/codingyar_logo.jpg' %}" alt="Logo" class="h-24 mx-auto">
                 </div>
-            </div>
-        </div>
-    </div>
-</footer>
-<!-- Footer End-->
+
+                
+                <!-- Social Media Links -->
+                <div class="flex justify-center space-x-6 space-x-reverse mb-8">
+                    <a href="https://instagram.com/manisasanii" class="social-link" aria-label="ما را در اینستاگرام دنبال کنید">
+                        <i class="fab fa-instagram"></i>
+                    </a>
+                    <a href="https://t.me/ManiSasani" class="social-link" aria-label="ما را در تلگرام دنبال کنید">
+                        <i class="fab fa-telegram"></i>
+                    </a>
+                    <a href="https://www.linkedin.com/in/manisasani/e" class="social-link" aria-label="ما را در لینکدین دنبال کنید">
+                        <i class="fab fa-linkedin"></i>
+                    </a>
+                </div>
+
+<style>
+    .footer-link {
+        @apply text-gray-600 hover:text-primary-600 transition-colors duration-200 text-sm;
+    }
+    
+    .social-link {
+        @apply text-gray-400 hover:text-primary-600 transition-colors duration-200 text-xl;
+    }
+</style>
+
+<!-- Back to Top Button -->
+<button id="backToTop" 
+        class="fixed bottom-8 left-8 bg-primary-600 text-white p-3 rounded-full shadow-lg opacity-0 transition-opacity duration-300 hover:bg-primary-700"
+        onclick="window.scrollTo({top: 0, behavior: 'smooth'})"
+        aria-label="بازگشت به بالا">
+    <i class="fas fa-arrow-up"></i>
+</button>
+
+<script>
+    // Show/Hide Back to Top button based on scroll position
+    window.addEventListener('scroll', function() {
+        const backToTop = document.getElementById('backToTop');
+        if (window.scrollY > 300) {
+            backToTop.style.opacity = '1';
+        } else {
+            backToTop.style.opacity = '0';
+        }
+    });
+</script>

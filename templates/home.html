@@ -1,9 +1,290 @@
 {% extends '_base.html' %}
+{% load static %}
+{% load i18n %}
 
-{% block page_title %}
-Home Page
+{% block page_title %}فروشگاه آنلاین | خانه{% endblock %}
+
+{% block extra_css %}
+<style>
+    .hero-pattern {
+        background-image: url("data:image/svg+xml,%3Csvg width='80' height='80' viewBox='0 0 80 80' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%239C92AC' fill-opacity='0.1'%3E%3Cpath d='M50 50c0-5.523 4.477-10 10-10s10 4.477 10 10-4.477 10-10 10c0 5.523-4.477 10-10 10s-10-4.477-10-10 4.477-10 10-10zM10 10c0-5.523 4.477-10 10-10s10 4.477 10 10-4.477 10-10 10c0 5.523-4.477 10-10 10S0 25.523 0 20s4.477-10 10-10zm10 8c4.418 0 8-3.582 8-8s-3.582-8-8-8-8 3.582-8 8 3.582 8 8 8zm40 40c4.418 0 8-3.582 8-8s-3.582-8-8-8-8 3.582-8 8 3.582 8 8 8z' /%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+    }
+
+    .floating {
+        animation: floating 3s ease-in-out infinite;
+    }
+
+    @keyframes floating {
+        0% { transform: translate(0, 0px); }
+        50% { transform: translate(0, 15px); }
+        100% { transform: translate(0, -0px); }
+    }
+
+    .slide-up {
+        animation: slideUp 0.5s ease-out;
+    }
+
+    @keyframes slideUp {
+        from { transform: translateY(20px); opacity: 0; }
+        to { transform: translateY(0); opacity: 1; }
+    }
+
+    .category-card::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(to right, #4F46E5, #7C3AED);
+        transform: scaleX(0);
+        transform-origin: 0 50%;
+        transition: transform .5s ease-out;
+        z-index: -1;
+        border-radius: 0.75rem;
+    }
+
+    .category-card:hover::before {
+        transform: scaleX(1);
+    }
+
+    .product-card {
+        transition: all 0.3s ease;
+    }
+
+    .product-card:hover {
+        transform: translateY(-5px);
+    }
+
+    .shine-effect {
+        position: relative;
+        overflow: hidden;
+    }
+
+    .shine-effect::after {
+        content: '';
+        position: absolute;
+        top: -50%;
+        left: -50%;
+        width: 200%;
+        height: 200%;
+        background: linear-gradient(
+            to right,
+            rgba(255,255,255,0) 0%,
+            rgba(255,255,255,.3) 50%,
+            rgba(255,255,255,0) 100%
+        );
+        transform: rotate(30deg);
+        animation: shine 3s infinite;
+    }
+
+    @keyframes shine {
+        from { transform: translateX(-100%) rotate(30deg); }
+        to { transform: translateX(100%) rotate(30deg); }
+    }
+</style>
 {% endblock %}
 
 {% block content %}
-<h1>Home Page</h1>
+<!-- Hero Section -->
+<div class="relative min-h-screen bg-gradient-to-br from-indigo-900 via-purple-900 to-pink-900 overflow-hidden hero-pattern">
+    <div class="absolute inset-0 bg-black opacity-50"></div>
+    
+    <!-- Animated Shapes -->
+    <div class="absolute inset-0 overflow-hidden">
+        <div class="absolute w-64 h-64 rounded-full bg-purple-500 opacity-10 -top-20 -left-20 floating"></div>
+        <div class="absolute w-96 h-96 rounded-full bg-indigo-500 opacity-10 top-1/3 right-1/4 floating" style="animation-delay: 1s;"></div>
+        <div class="absolute w-48 h-48 rounded-full bg-pink-500 opacity-10 bottom-20 right-20 floating" style="animation-delay: 2s;"></div>
+    </div>
+
+    <div class="container relative z-10 h-screen flex items-center">
+        <div class="w-full lg:w-2/3 text-white space-y-8 slide-up">
+            <h1 class="text-5xl lg:text-7xl font-black leading-tight">
+                فروشگاه آنلاین
+                <span class="text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-600">مدرن و پیشرو</span>
+            </h1>
+            <p class="text-xl lg:text-2xl text-gray-300 leading-relaxed">
+                بهترین محصولات با کیفیت‌ترین برندها را با ما تجربه کنید
+            </p>
+            <div class="flex flex-wrap gap-4">
+                <a href="{% url 'product_list' %}" 
+                   class="shine-effect px-8 py-4 bg-gradient-to-r from-purple-600 to-pink-600 rounded-xl font-medium hover:from-purple-700 hover:to-pink-700 transition-all transform hover:scale-105">
+                    مشاهده محصولات
+                    <i class="fas fa-arrow-left mr-2"></i>
+                </a>
+                <a href="#categories" 
+                   class="px-8 py-4 bg-white/10 backdrop-blur-sm rounded-xl font-medium hover:bg-white/20 transition-all">
+                    دسته‌بندی‌ها
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scroll Indicator -->
+    <div class="absolute bottom-10 left-1/2 transform -translate-x-1/2 animate-bounce">
+        <i class="fas fa-chevron-down text-white text-2xl"></i>
+    </div>
+</div>
+
+<!-- Categories Section -->
+<div id="categories" class="py-24 bg-gradient-to-b from-gray-900 to-gray-800">
+    <div class="container">
+        <div class="text-center mb-16">
+            <h2 class="text-4xl font-bold text-white mb-4">دسته‌بندی محصولات</h2>
+            <div class="w-24 h-1 bg-gradient-to-r from-purple-600 to-pink-600 mx-auto"></div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+            <!-- Category Cards -->
+            {% for category in categories %}
+            <div class="category-card relative p-1 rounded-xl bg-gradient-to-r from-purple-600 to-pink-600 transform hover:scale-105 transition-all">
+                <div class="bg-gray-900 rounded-xl p-6 h-full">
+                    <div class="w-16 h-16 mb-6 rounded-full bg-gradient-to-r from-purple-600 to-pink-600 flex items-center justify-center">
+                        <i class="{{ category.icon }} text-2xl text-white"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-white mb-2">{{ category.name }}</h3>
+                    <p class="text-gray-400">{{ category.description }}</p>
+                    <a href="{{ category.get_absolute_url }}" class="mt-4 inline-block text-purple-400 hover:text-purple-300">
+                        مشاهده محصولات
+                        <i class="fas fa-arrow-left mr-1"></i>
+                    </a>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+
+<!-- Featured Products -->
+<div class="py-24 bg-gray-900">
+    <div class="container">
+        <div class="flex justify-between items-center mb-16">
+            <div>
+                <h2 class="text-4xl font-bold text-white mb-4">محصولات ویژه</h2>
+                <div class="w-24 h-1 bg-gradient-to-r from-purple-600 to-pink-600"></div>
+            </div>
+            <a href="{% url 'product_list' %}" 
+               class="px-6 py-3 bg-gradient-to-r from-purple-600 to-pink-600 rounded-xl text-white font-medium hover:from-purple-700 hover:to-pink-700 transition-all transform hover:scale-105">
+                مشاهده همه
+                <i class="fas fa-arrow-left mr-2"></i>
+            </a>
+        </div>
+        
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+            {% for product in featured_products %}
+            <div class="product-card bg-gray-800 rounded-xl overflow-hidden">
+                <div class="relative aspect-square overflow-hidden">
+                    <img src="{{ product.image.url }}" 
+                         alt="{{ product.title }}" 
+                         class="w-full h-full object-cover transform hover:scale-110 transition-all duration-500">
+                    {% if product.discount %}
+                    <div class="absolute top-4 right-4">
+                        <span class="px-4 py-2 bg-red-600 text-white rounded-full text-sm font-medium">
+                            {{ product.discount }}% تخفیف
+                        </span>
+                    </div>
+                    {% endif %}
+                </div>
+                <div class="p-6">
+                    <h3 class="text-xl font-bold text-white mb-2">{{ product.title }}</h3>
+                    <div class="flex items-center justify-between mb-4">
+                        <div class="flex items-center">
+                            <span class="text-purple-400 font-bold text-xl">{{ product.price }}</span>
+                            {% if product.old_price %}
+                            <span class="text-gray-500 line-through text-sm mr-2">{{ product.old_price }}</span>
+                            {% endif %}
+                        </div>
+                        <div class="flex items-center">
+                            <span class="text-yellow-400 mr-1">{{ product.rating }}</span>
+                            <i class="fas fa-star text-yellow-400"></i>
+                        </div>
+                    </div>
+                    <a href="{{ product.get_absolute_url }}" 
+                       class="block w-full py-3 bg-gradient-to-r from-purple-600 to-pink-600 rounded-lg text-center text-white font-medium hover:from-purple-700 hover:to-pink-700 transition-all transform hover:scale-105">
+                        مشاهده محصول
+                    </a>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+
+<!-- Features Section -->
+<div class="py-24 bg-gradient-to-t from-gray-900 to-gray-800">
+    <div class="container">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <!-- Feature Cards -->
+            <div class="bg-gray-800/50 backdrop-blur-lg rounded-xl p-8 transform hover:scale-105 transition-all">
+                <div class="w-16 h-16 rounded-full bg-gradient-to-r from-purple-600 to-pink-600 flex items-center justify-center mb-6">
+                    <i class="fas fa-truck text-2xl text-white"></i>
+                </div>
+                <h3 class="text-xl font-bold text-white mb-4">ارسال رایگان</h3>
+                <p class="text-gray-400">برای سفارش‌های بالای ۵۰۰ هزار تومان ارسال رایگان داریم</p>
+            </div>
+            
+            <div class="bg-gray-800/50 backdrop-blur-lg rounded-xl p-8 transform hover:scale-105 transition-all">
+                <div class="w-16 h-16 rounded-full bg-gradient-to-r from-purple-600 to-pink-600 flex items-center justify-center mb-6">
+                    <i class="fas fa-shield-alt text-2xl text-white"></i>
+                </div>
+                <h3 class="text-xl font-bold text-white mb-4">ضمانت اصالت</h3>
+                <p class="text-gray-400">تمامی محصولات ما دارای ضمانت اصالت و گارانتی هستند</p>
+            </div>
+            
+            <div class="bg-gray-800/50 backdrop-blur-lg rounded-xl p-8 transform hover:scale-105 transition-all">
+                <div class="w-16 h-16 rounded-full bg-gradient-to-r from-purple-600 to-pink-600 flex items-center justify-center mb-6">
+                    <i class="fas fa-headset text-2xl text-white"></i>
+                </div>
+                <h3 class="text-xl font-bold text-white mb-4">پشتیبانی ۲۴/۷</h3>
+                <p class="text-gray-400">در تمام ساعات هفته آماده پاسخگویی به شما هستیم</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Newsletter Section -->
+<div class="relative py-24 bg-gray-900 overflow-hidden">
+    <div class="absolute inset-0 hero-pattern opacity-5"></div>
+    <div class="container relative z-10">
+        <div class="max-w-3xl mx-auto text-center">
+            <h2 class="text-4xl font-bold text-white mb-6">عضویت در خبرنامه</h2>
+            <p class="text-gray-400 mb-8">برای اطلاع از آخرین تخفیف‌ها و محصولات جدید در خبرنامه ما عضو شوید</p>
+            <form class="flex flex-col sm:flex-row gap-4 justify-center">
+                <input type="email" 
+                       placeholder="ایمیل خود را وارد کنید" 
+                       class="flex-1 px-6 py-4 bg-gray-800 border border-gray-700 rounded-xl text-white placeholder-gray-500 focus:outline-none focus:border-purple-600 transition-all">
+                <button type="submit" 
+                        class="px-8 py-4 bg-gradient-to-r from-purple-600 to-pink-600 rounded-xl text-white font-medium hover:from-purple-700 hover:to-pink-700 transition-all transform hover:scale-105">
+                    عضویت
+                    <i class="fas fa-paper-plane mr-2"></i>
+                </button>
+            </form>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    // Smooth scroll for anchor links
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function (e) {
+            e.preventDefault();
+            document.querySelector(this.getAttribute('href')).scrollIntoView({
+                behavior: 'smooth'
+            });
+        });
+    });
+
+    // Intersection Observer for fade-in animations
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('slide-up');
+            }
+        });
+    }, {
+        threshold: 0.1
+    });
+
+    document.querySelectorAll('.category-card, .product-card, .feature-card').forEach((el) => observer.observe(el));
+</script>
 {% endblock %}

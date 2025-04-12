@@ -1,46 +1,165 @@
 {% load i18n %}
 
-<!-- Mini Cart Start -->
-<aside class="mini-cart" id="miniCart">
-    <div class="mini-cart-wrapper">
-        <a href="" class="btn-close"><i class="flaticon flaticon-cross"></i></a>
-        <div class="mini-cart-inner">
-            <h3 class="mini-cart__heading mb--40 mb-lg--30 text-right">{% translate 'Cart' %}</h3>
-            <div class="mini-cart__content">
-                <ul class="mini-cart__list text-right">
+<!-- Cart Sidebar -->
+<div x-data="{ isOpen: false }" 
+    x-show="isOpen"
+    @cart-opened.window="isOpen = true"
+    @keydown.escape.window="isOpen = false"
+    class="fixed inset-0 z-50 overflow-hidden"
+    style="display: none;">
+    
+    <!-- Backdrop -->
+    <div class="absolute inset-0 bg-gray-900/70 backdrop-blur-sm"
+         x-on:click="isOpen = false"></div>
+
+    <!-- Sidebar Content -->
+    <div class="absolute inset-y-0 left-0 max-w-md w-full bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 shadow-2xl">
+        <div class="flex flex-col h-full">
+            <!-- Header -->
+            <div class="flex items-center justify-between p-4 border-b border-gray-700">
+                <h2 class="text-xl font-bold text-white">
+                    <i class="fas fa-shopping-cart ml-2"></i>
+                    {% translate 'Cart' %}
+                </h2>
+                <button x-on:click="isOpen = false" 
+                        class="w-10 h-10 flex items-center justify-center rounded-full hover:bg-gray-700/50 text-gray-400 hover:text-white transition-colors">
+                    <i class="fas fa-times text-xl"></i>
+                </button>
+            </div>
+
+            <!-- Cart Items -->
+            <div class="flex-1 overflow-y-auto p-4">
+                {% if cart %}
+                <ul class="space-y-4">
                     {% for item in cart %}
-                        <li class="mini-cart__product d-flex justify-content-between">
-                            <div class="mini-cart__product__image">
-                                <a href="#">
-                                    <img src="assets/img/products/prod-1-100x100.jpg">
-                                </a>
+                    <li class="group bg-gray-800/50 backdrop-blur-sm rounded-xl p-4 hover:bg-gray-700/50 transition-colors">
+                        <div class="flex gap-4">
+                            <!-- Product Image -->
+                            <div class="relative flex-shrink-0 w-20 h-20 rounded-lg overflow-hidden">
+                                {% if item.product_obj.image %}
+                                <img src="{{ item.product_obj.image.url }}" 
+                                     alt="{{ item.product_obj.title }}"
+                                     class="w-full h-full object-cover">
+                                {% endif %}
+                                {% if item.product_obj.discount %}
+                                <div class="absolute top-0 right-0 bg-red-500 text-white text-xs px-1.5 py-0.5 rounded-bl-lg">
+                                    {{ item.product_obj.discount }}%
+                                </div>
+                                {% endif %}
                             </div>
-                            <div class="mini-cart__product__content pt-2">
-                                <span class="mini-cart__product__title d-flex flex-row justify-content-between">
-                                    <a href="#">{{ item.product_obj.title }}</a>
-                                    <a href="#" class="">
-                                        &#10060;
+
+                            <!-- Product Info -->
+                            <div class="flex-1">
+                                <div class="flex items-start justify-between">
+                                    <a href="{{ item.product_obj.get_absolute_url }}" 
+                                       class="text-white hover:text-purple-400 transition-colors">
+                                        {{ item.product_obj.title }}
                                     </a>
-                                </span>
-                                <span class="mini-cart__product__quantity">
-                                    <span>{{ item.product_obj.price }}</span> &#215; <span>{{ item.quantity }}</span>
-                                </span>
+                                    <form action="{% url 'cart:cart_remove' item.product_obj.id %}" 
+                                          method="POST"
+                                          class="opacity-0 group-hover:opacity-100 transition-opacity">
+                                        {% csrf_token %}
+                                        <button type="submit" 
+                                                class="text-gray-400 hover:text-red-500 transition-colors">
+                                            <i class="fas fa-times"></i>
+                                        </button>
+                                    </form>
+                                </div>
+
+                                <!-- Price & Quantity -->
+                                <div class="flex items-center justify-between mt-2">
+                                    <div class="text-purple-400 font-medium">
+                                        {{ item.product_obj.price }} {% translate '$' %}
+                                    </div>
+                                    <div class="flex items-center gap-3 bg-gray-700/50 rounded-lg">
+                                        <form action="{% url 'cart:cart_add' item.product_obj.id %}" 
+                                              method="POST"
+                                              class="flex items-center">
+                                            {% csrf_token %}
+                                            <button type="submit" name="quantity" value="{{ item.quantity|add:'-1' }}"
+                                                    class="w-8 h-8 flex items-center justify-center text-gray-400 hover:text-white transition-colors"
+                                                    {% if item.quantity == 1 %}disabled{% endif %}>
+                                                <i class="fas fa-minus text-xs"></i>
+                                            </button>
+                                            <span class="w-8 text-center text-white">{{ item.quantity }}</span>
+                                            <button type="submit" name="quantity" value="{{ item.quantity|add:'1' }}"
+                                                    class="w-8 h-8 flex items-center justify-center text-gray-400 hover:text-white transition-colors">
+                                                <i class="fas fa-plus text-xs"></i>
+                                            </button>
+                                        </form>
+                                    </div>
+                                </div>
+
+                                <!-- Total Price -->
+                                <div class="mt-2 text-sm text-gray-400">
+                                    مجموع: {{ item.total_price }} {% translate '$' %}
+                                </div>
                             </div>
-                        </li>
+                        </div>
+                    </li>
                     {% endfor %}
                 </ul>
-                <div class="mini-cart__total">
-                    <span>{% translate 'Total' %}</span>
-                    <span class="ammount">{{ cart.get_total_price }} {% translate '$' %}</span>
+                {% else %}
+                <div class="flex flex-col items-center justify-center h-full text-center">
+                    <div class="w-20 h-20 rounded-full bg-gray-800/50 flex items-center justify-center mb-4">
+                        <i class="fas fa-shopping-cart text-2xl text-gray-500"></i>
+                    </div>
+                    <p class="text-gray-400">سبد خرید شما خالی است</p>
                 </div>
-                <div class="mini-cart__buttons">
-                    <a href="{% url 'cart:cart_detail' %}" class="btn btn-fullwidth btn-bg-sand mb--20">{% translate 'Go to cart' %}</a>
-                    {% if not cart.is_empty %}
-                        <a href="{% url 'order_create' %}" class="btn btn-fullwidth btn-bg-sand">{% translate 'Checkout' %}</a>
-                    {% endif %}
+                {% endif %}
+            </div>
+
+            <!-- Footer -->
+            {% if not cart.is_empty %}
+            <div class="p-4 border-t border-gray-700 space-y-4">
+                <!-- Cart Total -->
+                <div class="flex items-center justify-between text-white">
+                    <span class="text-gray-400">{% translate 'Total' %}</span>
+                    <span class="text-xl font-bold">{{ cart.get_total_price }} {% translate '$' %}</span>
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="grid grid-cols-2 gap-4">
+                    <a href="{% url 'cart:cart_detail' %}" 
+                       class="px-6 py-3 bg-gray-700/50 hover:bg-gray-600/50 text-white text-center rounded-xl transition-colors">
+                        {% translate 'View Cart' %}
+                    </a>
+                    <a href="{% url 'order_create' %}" 
+                       class="px-6 py-3 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white text-center rounded-xl transition-colors shine-effect">
+                        {% translate 'Checkout' %}
+                    </a>
                 </div>
             </div>
+            {% endif %}
         </div>
     </div>
-</aside>
-<!-- Mini Cart End -->
+</div>
+
+<style>
+    .shine-effect {
+        position: relative;
+        overflow: hidden;
+    }
+
+    .shine-effect::after {
+        content: '';
+        position: absolute;
+        top: -50%;
+        left: -50%;
+        width: 200%;
+        height: 200%;
+        background: linear-gradient(
+            to right,
+            rgba(255,255,255,0) 0%,
+            rgba(255,255,255,.3) 50%,
+            rgba(255,255,255,0) 100%
+        );
+        transform: rotate(30deg);
+        animation: shine 3s infinite;
+    }
+
+    @keyframes shine {
+        from { transform: translateX(-100%) rotate(30deg); }
+        to { transform: translateX(100%) rotate(30deg); }
+    }
+</style>

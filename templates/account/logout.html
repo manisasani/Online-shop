@@ -1,14 +1,37 @@
 {% extends '_base.html' %}
+{% load static %}
 
-{% block page_title %}
-    Logout
-{% endblock %}
+{% block page_title %}خروج{% endblock %}
 
 {% block content %}
-    <h1>Log Out</h1>
-    <h2>Are you sure you want to logout?</h2>
-    <form action="" method="post">
-        {% csrf_token %}
-        <input type="submit" value="Are you sure?">
-    </form>
+<div class="min-h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+    <div class="max-w-md w-full text-center">
+        <!-- Logout Confirmation -->
+        <div class="bg-white py-8 px-4 shadow-sm rounded-2xl sm:px-10">
+            <div class="mb-6">
+                <div class="w-20 h-20 mx-auto bg-red-100 rounded-full flex items-center justify-center">
+                    <i class="fas fa-sign-out-alt text-3xl text-red-600"></i>
+                </div>
+                <h2 class="mt-4 text-2xl font-bold text-gray-900">
+                    خروج از حساب کاربری
+                </h2>
+                <p class="mt-2 text-sm text-gray-600">
+                    آیا مطمئن هستید که می‌خواهید از حساب کاربری خود خارج شوید؟
+                </p>
+            </div>
+
+            <form method="POST" class="space-y-4">
+                {% csrf_token %}
+                <button type="submit"
+                        class="w-full flex justify-center py-2 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500">
+                    بله، خارج می‌شوم
+                </button>
+                <a href="{% url 'product_list' %}"
+                   class="w-full flex justify-center py-2 px-4 border border-gray-300 rounded-lg shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500">
+                    انصراف
+                </a>
+            </form>
+        </div>
+    </div>
+</div>
 {% endblock %}
