@@ -1,13 +1,16 @@
 {% extends '_base.html' %}
 {% load static %}
 {% load i18n %}
+{% load humanize %}
+{% load persian_translation_tags %}
 
 {% block page_title %}فروشگاه آنلاین | خانه{% endblock %}
 
 {% block extra_css %}
 <style>
     .hero-pattern {
-        background-image: url("data:image/svg+xml,%3Csvg width='80' height='80' viewBox='0 0 80 80' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%239C92AC' fill-opacity='0.1'%3E%3Cpath d='M50 50c0-5.523 4.477-10 10-10s10 4.477 10 10-4.477 10-10 10c0 5.523-4.477 10-10 10s-10-4.477-10-10 4.477-10 10-10zM10 10c0-5.523 4.477-10 10-10s10 4.477 10 10-4.477 10-10 10c0 5.523-4.477 10-10 10S0 25.523 0 20s4.477-10 10-10zm10 8c4.418 0 8-3.582 8-8s-3.582-8-8-8-8 3.582-8 8 3.582 8 8 8zm40 40c4.418 0 8-3.582 8-8s-3.582-8-8-8-8 3.582-8 8 3.582 8 8 8z' /%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+        background-color: #f8fafc;
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewBox='0 0 100 100'%3E%3Cg fill-rule='evenodd'%3E%3Cg fill='%239C92AC' fill-opacity='0.05'%3E%3Cpath d='M11 18c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm48 25c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm-43-7c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm63 31c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM34 90c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm56-76c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM12 86c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm28-65c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm23-11c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-6 60c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm29 22c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zM32 63c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm57-13c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-9-21c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM60 91c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM35 41c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM12 60c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2z'%3E%3C/path%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
     }
 
     .floating {
@@ -19,149 +22,89 @@
         50% { transform: translate(0, 15px); }
         100% { transform: translate(0, -0px); }
     }
-
-    .slide-up {
-        animation: slideUp 0.5s ease-out;
-    }
-
-    @keyframes slideUp {
-        from { transform: translateY(20px); opacity: 0; }
-        to { transform: translateY(0); opacity: 1; }
-    }
-
-    .category-card::before {
-        content: '';
-        position: absolute;
-        inset: 0;
-        background: linear-gradient(to right, #4F46E5, #7C3AED);
-        transform: scaleX(0);
-        transform-origin: 0 50%;
-        transition: transform .5s ease-out;
-        z-index: -1;
-        border-radius: 0.75rem;
-    }
-
-    .category-card:hover::before {
-        transform: scaleX(1);
-    }
-
-    .product-card {
-        transition: all 0.3s ease;
-    }
-
-    .product-card:hover {
-        transform: translateY(-5px);
-    }
-
-    .shine-effect {
-        position: relative;
-        overflow: hidden;
-    }
-
-    .shine-effect::after {
-        content: '';
-        position: absolute;
-        top: -50%;
-        left: -50%;
-        width: 200%;
-        height: 200%;
-        background: linear-gradient(
-            to right,
-            rgba(255,255,255,0) 0%,
-            rgba(255,255,255,.3) 50%,
-            rgba(255,255,255,0) 100%
-        );
-        transform: rotate(30deg);
-        animation: shine 3s infinite;
-    }
-
-    @keyframes shine {
-        from { transform: translateX(-100%) rotate(30deg); }
-        to { transform: translateX(100%) rotate(30deg); }
-    }
 </style>
 {% endblock %}
 
 {% block content %}
 <!-- Hero Section -->
-<div class="relative min-h-screen bg-gradient-to-br from-indigo-900 via-purple-900 to-pink-900 overflow-hidden hero-pattern">
-    <div class="absolute inset-0 bg-black opacity-50"></div>
-    
-    <!-- Animated Shapes -->
-    <div class="absolute inset-0 overflow-hidden">
-        <div class="absolute w-64 h-64 rounded-full bg-purple-500 opacity-10 -top-20 -left-20 floating"></div>
-        <div class="absolute w-96 h-96 rounded-full bg-indigo-500 opacity-10 top-1/3 right-1/4 floating" style="animation-delay: 1s;"></div>
-        <div class="absolute w-48 h-48 rounded-full bg-pink-500 opacity-10 bottom-20 right-20 floating" style="animation-delay: 2s;"></div>
-    </div>
-
-    <div class="container relative z-10 h-screen flex items-center">
-        <div class="w-full lg:w-2/3 text-white space-y-8 slide-up">
-            <h1 class="text-5xl lg:text-7xl font-black leading-tight">
-                فروشگاه آنلاین
-                <span class="text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-600">مدرن و پیشرو</span>
-            </h1>
-            <p class="text-xl lg:text-2xl text-gray-300 leading-relaxed">
-                بهترین محصولات با کیفیت‌ترین برندها را با ما تجربه کنید
-            </p>
-            <div class="flex flex-wrap gap-4">
-                <a href="{% url 'product_list' %}" 
-                   class="shine-effect px-8 py-4 bg-gradient-to-r from-purple-600 to-pink-600 rounded-xl font-medium hover:from-purple-700 hover:to-pink-700 transition-all transform hover:scale-105">
-                    مشاهده محصولات
-                    <i class="fas fa-arrow-left mr-2"></i>
-                </a>
-                <a href="#categories" 
-                   class="px-8 py-4 bg-white/10 backdrop-blur-sm rounded-xl font-medium hover:bg-white/20 transition-all">
-                    دسته‌بندی‌ها
-                </a>
+<div class="relative overflow-hidden hero-pattern">
+    <div class="container py-20 lg:py-32">
+        <div class="grid lg:grid-cols-2 gap-12 items-center">
+            <div class="space-y-8">
+                <h1 class="text-4xl lg:text-6xl font-bold text-gray-900">
+                    خرید آنلاین 
+                    <span class="text-purple-600">مدرن و آسان</span>
+                </h1>
+                <p class="text-xl text-gray-600 leading-relaxed">
+                    بهترین محصولات با کیفیت‌ترین برندها را با ما تجربه کنید
+                </p>
+                <div class="flex flex-wrap gap-4">
+                    <a href="{% url 'product_list' %}" 
+                       class="px-8 py-4 bg-purple-600 text-white rounded-xl font-medium hover:bg-purple-700 transition-all transform hover:-translate-y-1">
+                        مشاهده محصولات
+                        <i class="fas fa-arrow-left mr-2"></i>
+                    </a>
+                    <a href="#categories" 
+                       class="px-8 py-4 bg-gray-100 text-gray-800 rounded-xl font-medium hover:bg-gray-200 transition-all">
+                        دسته‌بندی‌ها
+                    </a>
+                </div>
+            </div>
+            <div class="relative">
+                
+                <div class="absolute -z-10 top-1/2 right-1/2 w-[500px] h-[500px] bg-purple-100 rounded-full blur-3xl"></div>
             </div>
         </div>
-    </div>
-
-    <!-- Scroll Indicator -->
-    <div class="absolute bottom-10 left-1/2 transform -translate-x-1/2 animate-bounce">
-        <i class="fas fa-chevron-down text-white text-2xl"></i>
     </div>
 </div>
 
 <!-- Categories Section -->
-<div id="categories" class="py-24 bg-gradient-to-b from-gray-900 to-gray-800">
+<div id="categories" class="py-20 bg-white">
     <div class="container">
         <div class="text-center mb-16">
-            <h2 class="text-4xl font-bold text-white mb-4">دسته‌بندی محصولات</h2>
-            <div class="w-24 h-1 bg-gradient-to-r from-purple-600 to-pink-600 mx-auto"></div>
+            <h2 class="text-3xl font-bold text-gray-900 mb-4">دسته‌بندی محصولات</h2>
+            <p class="text-gray-600">محصولات مورد نظر خود را بر اساس دسته‌بندی پیدا کنید</p>
         </div>
 
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-            <!-- Category Cards -->
             {% for category in categories %}
-            <div class="category-card relative p-1 rounded-xl bg-gradient-to-r from-purple-600 to-pink-600 transform hover:scale-105 transition-all">
-                <div class="bg-gray-900 rounded-xl p-6 h-full">
-                    <div class="w-16 h-16 mb-6 rounded-full bg-gradient-to-r from-purple-600 to-pink-600 flex items-center justify-center">
-                        <i class="{{ category.icon }} text-2xl text-white"></i>
+                <a href="{{ category.get_absolute_url }}" 
+                class="group bg-white p-6 rounded-2xl border hover:border-purple-200 hover:shadow-lg transition-all">
+                    <div class="w-16 h-16 mb-6 rounded-xl bg-purple-100 text-purple-600 flex items-center justify-center group-hover:bg-purple-600 group-hover:text-white transition-colors">
+                        {% if category.name == "آرایشی و بهداشتی" %}
+                            <i class="fas fa-pump-soap text-2xl"></i>
+                        {% elif category.name == "طلا و نقره" %}
+                            <i class="fas fa-gem text-2xl"></i>
+                        {% elif category.name == "لباس" %}
+                            <i class="fas fa-tshirt text-2xl"></i>
+                        {% elif category.name == "موبایل" %}
+                            <i class="fas fa-mobile-alt text-2xl"></i>
+                        {% else %}
+                            <i class="fas fa-shopping-bag text-2xl"></i>
+                        {% endif %}
                     </div>
-                    <h3 class="text-xl font-bold text-white mb-2">{{ category.name }}</h3>
-                    <p class="text-gray-400">{{ category.description }}</p>
-                    <a href="{{ category.get_absolute_url }}" class="mt-4 inline-block text-purple-400 hover:text-purple-300">
+                    <h3 class="text-xl font-bold text-gray-900 mb-2">{{ category.name }}</h3>
+                    <p class="text-gray-600 mb-4">{{ category.description }}</p>
+                    <span class="text-purple-600 group-hover:text-purple-700 font-medium">
                         مشاهده محصولات
                         <i class="fas fa-arrow-left mr-1"></i>
-                    </a>
-                </div>
-            </div>
+                    </span>
+                </a>
             {% endfor %}
         </div>
     </div>
 </div>
 
 <!-- Featured Products -->
-<div class="py-24 bg-gray-900">
+<div class="py-20 bg-gray-50">
     <div class="container">
-        <div class="flex justify-between items-center mb-16">
+        <div class="flex justify-between items-end mb-12">
             <div>
-                <h2 class="text-4xl font-bold text-white mb-4">محصولات ویژه</h2>
-                <div class="w-24 h-1 bg-gradient-to-r from-purple-600 to-pink-600"></div>
+                <h2 class="text-3xl font-bold text-gray-900 mb-4">محصولات ویژه</h2>
+                <p class="text-gray-600">محصولات منتخب و پرطرفدار ما</p>
             </div>
             <a href="{% url 'product_list' %}" 
-               class="px-6 py-3 bg-gradient-to-r from-purple-600 to-pink-600 rounded-xl text-white font-medium hover:from-purple-700 hover:to-pink-700 transition-all transform hover:scale-105">
+               class="px-6 py-3 bg-white text-purple-600 border border-purple-200 rounded-xl font-medium hover:bg-purple-50 transition-all">
                 مشاهده همه
                 <i class="fas fa-arrow-left mr-2"></i>
             </a>
@@ -169,35 +112,35 @@
         
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
             {% for product in featured_products %}
-            <div class="product-card bg-gray-800 rounded-xl overflow-hidden">
+            <div class="bg-white rounded-2xl border hover:border-purple-200 hover:shadow-lg transition-all overflow-hidden group">
                 <div class="relative aspect-square overflow-hidden">
                     <img src="{{ product.image.url }}" 
                          alt="{{ product.title }}" 
-                         class="w-full h-full object-cover transform hover:scale-110 transition-all duration-500">
+                         class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
                     {% if product.discount %}
                     <div class="absolute top-4 right-4">
-                        <span class="px-4 py-2 bg-red-600 text-white rounded-full text-sm font-medium">
+                        <span class="px-3 py-1 bg-red-500 text-white rounded-lg text-sm">
                             {{ product.discount }}% تخفیف
                         </span>
                     </div>
                     {% endif %}
                 </div>
                 <div class="p-6">
-                    <h3 class="text-xl font-bold text-white mb-2">{{ product.title }}</h3>
+                    <h3 class="text-lg font-bold text-gray-900 mb-2">{{ product.title }}</h3>
                     <div class="flex items-center justify-between mb-4">
                         <div class="flex items-center">
-                            <span class="text-purple-400 font-bold text-xl">{{ product.price }}</span>
+                            <span class="text-purple-600 font-bold text-xl">{{ product.price|intcomma:False|translate_number }}</span>
                             {% if product.old_price %}
-                            <span class="text-gray-500 line-through text-sm mr-2">{{ product.old_price }}</span>
+                            <span class="text-gray-400 line-through text-sm mr-2">{{ product.old_price|intcomma:False|translate_number }}</span>
                             {% endif %}
                         </div>
                         <div class="flex items-center">
-                            <span class="text-yellow-400 mr-1">{{ product.rating }}</span>
-                            <i class="fas fa-star text-yellow-400"></i>
+                            <span class="text-yellow-500 mr-1">{{ product.rating }}</span>
+                            <i class="fas fa-star text-yellow-500"></i>
                         </div>
                     </div>
                     <a href="{{ product.get_absolute_url }}" 
-                       class="block w-full py-3 bg-gradient-to-r from-purple-600 to-pink-600 rounded-lg text-center text-white font-medium hover:from-purple-700 hover:to-pink-700 transition-all transform hover:scale-105">
+                       class="block w-full py-3 bg-gray-100 text-center text-gray-900 rounded-xl font-medium hover:bg-purple-600 hover:text-white transition-all">
                         مشاهده محصول
                     </a>
                 </div>
@@ -208,50 +151,48 @@
 </div>
 
 <!-- Features Section -->
-<div class="py-24 bg-gradient-to-t from-gray-900 to-gray-800">
+<div class="py-20 bg-white">
     <div class="container">
         <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <!-- Feature Cards -->
-            <div class="bg-gray-800/50 backdrop-blur-lg rounded-xl p-8 transform hover:scale-105 transition-all">
-                <div class="w-16 h-16 rounded-full bg-gradient-to-r from-purple-600 to-pink-600 flex items-center justify-center mb-6">
-                    <i class="fas fa-truck text-2xl text-white"></i>
+            <div class="p-8 rounded-2xl bg-gray-50 hover:bg-purple-50 transition-colors">
+                <div class="w-16 h-16 rounded-xl bg-purple-100 text-purple-600 flex items-center justify-center mb-6">
+                    <i class="fas fa-truck text-2xl"></i>
                 </div>
-                <h3 class="text-xl font-bold text-white mb-4">ارسال رایگان</h3>
-                <p class="text-gray-400">برای سفارش‌های بالای ۵۰۰ هزار تومان ارسال رایگان داریم</p>
+                <h3 class="text-xl font-bold text-gray-900 mb-4">ارسال رایگان</h3>
+                <p class="text-gray-600">برای سفارش‌های بالای ۵۰۰ هزار تومان ارسال رایگان داریم</p>
             </div>
             
-            <div class="bg-gray-800/50 backdrop-blur-lg rounded-xl p-8 transform hover:scale-105 transition-all">
-                <div class="w-16 h-16 rounded-full bg-gradient-to-r from-purple-600 to-pink-600 flex items-center justify-center mb-6">
-                    <i class="fas fa-shield-alt text-2xl text-white"></i>
+            <div class="p-8 rounded-2xl bg-gray-50 hover:bg-purple-50 transition-colors">
+                <div class="w-16 h-16 rounded-xl bg-purple-100 text-purple-600 flex items-center justify-center mb-6">
+                    <i class="fas fa-shield-alt text-2xl"></i>
                 </div>
-                <h3 class="text-xl font-bold text-white mb-4">ضمانت اصالت</h3>
-                <p class="text-gray-400">تمامی محصولات ما دارای ضمانت اصالت و گارانتی هستند</p>
+                <h3 class="text-xl font-bold text-gray-900 mb-4">ضمانت اصالت</h3>
+                <p class="text-gray-600">تمامی محصولات ما دارای ضمانت اصالت و گارانتی هستند</p>
             </div>
             
-            <div class="bg-gray-800/50 backdrop-blur-lg rounded-xl p-8 transform hover:scale-105 transition-all">
-                <div class="w-16 h-16 rounded-full bg-gradient-to-r from-purple-600 to-pink-600 flex items-center justify-center mb-6">
-                    <i class="fas fa-headset text-2xl text-white"></i>
+            <div class="p-8 rounded-2xl bg-gray-50 hover:bg-purple-50 transition-colors">
+                <div class="w-16 h-16 rounded-xl bg-purple-100 text-purple-600 flex items-center justify-center mb-6">
+                    <i class="fas fa-headset text-2xl"></i>
                 </div>
-                <h3 class="text-xl font-bold text-white mb-4">پشتیبانی ۲۴/۷</h3>
-                <p class="text-gray-400">در تمام ساعات هفته آماده پاسخگویی به شما هستیم</p>
+                <h3 class="text-xl font-bold text-gray-900 mb-4">پشتیبانی ۲۴/۷</h3>
+                <p class="text-gray-600">در تمام ساعات هفته آماده پاسخگویی به شما هستیم</p>
             </div>
         </div>
     </div>
 </div>
 
 <!-- Newsletter Section -->
-<div class="relative py-24 bg-gray-900 overflow-hidden">
-    <div class="absolute inset-0 hero-pattern opacity-5"></div>
-    <div class="container relative z-10">
+<div class="py-20 bg-gray-50">
+    <div class="container">
         <div class="max-w-3xl mx-auto text-center">
-            <h2 class="text-4xl font-bold text-white mb-6">عضویت در خبرنامه</h2>
-            <p class="text-gray-400 mb-8">برای اطلاع از آخرین تخفیف‌ها و محصولات جدید در خبرنامه ما عضو شوید</p>
+            <h2 class="text-3xl font-bold text-gray-900 mb-6">عضویت در خبرنامه</h2>
+            <p class="text-gray-600 mb-8">برای اطلاع از آخرین تخفیف‌ها و محصولات جدید در خبرنامه ما عضو شوید</p>
             <form class="flex flex-col sm:flex-row gap-4 justify-center">
                 <input type="email" 
                        placeholder="ایمیل خود را وارد کنید" 
-                       class="flex-1 px-6 py-4 bg-gray-800 border border-gray-700 rounded-xl text-white placeholder-gray-500 focus:outline-none focus:border-purple-600 transition-all">
+                       class="flex-1 px-6 py-4 bg-white border border-gray-200 rounded-xl text-gray-900 placeholder-gray-400 focus:outline-none focus:border-purple-400 transition-all">
                 <button type="submit" 
-                        class="px-8 py-4 bg-gradient-to-r from-purple-600 to-pink-600 rounded-xl text-white font-medium hover:from-purple-700 hover:to-pink-700 transition-all transform hover:scale-105">
+                        class="px-8 py-4 bg-purple-600 text-white rounded-xl font-medium hover:bg-purple-700 transition-all">
                     عضویت
                     <i class="fas fa-paper-plane mr-2"></i>
                 </button>
@@ -259,7 +200,6 @@
         </div>
     </div>
 </div>
-
 {% endblock %}
 
 {% block extra_js %}
@@ -273,18 +213,5 @@
             });
         });
     });
-
-    // Intersection Observer for fade-in animations
-    const observer = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                entry.target.classList.add('slide-up');
-            }
-        });
-    }, {
-        threshold: 0.1
-    });
-
-    document.querySelectorAll('.category-card, .product-card, .feature-card').forEach((el) => observer.observe(el));
 </script>
 {% endblock %}

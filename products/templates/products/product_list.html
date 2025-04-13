@@ -1,6 +1,8 @@
 {% extends '_base.html' %}
 {% load static %}
 {% load i18n %}
+{% load humanize %}
+{% load persian_translation_tags %}
 
 {% block content %}
 <div class="bg-gray-50 min-h-screen">
@@ -9,7 +11,13 @@
         <div class="container py-4">
             <div class="flex flex-wrap items-center justify-between">
                 <div class="flex items-center space-x-4 space-x-reverse">
-                    <h1 class="text-2xl font-bold text-gray-900">محصولات</h1>
+                    <h1 class="text-2xl font-bold text-gray-900">
+                        {% if category %}
+                            {{ category.name }}
+                        {% else %}
+                            همه محصولات
+                        {% endif %}
+                    </h1>
                     <span class="text-sm text-gray-500">
                         نمایش {{ products.start_index }} تا {{ products.end_index }} از {{ products.paginator.count }} محصول
                     </span>
@@ -34,94 +42,122 @@
         </div>
     </div>
 
-    <!-- Products Grid -->
     <div class="container py-8">
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            {% for product in products %}
-            <div class="bg-white rounded-lg shadow-sm overflow-hidden hover:shadow-md transition-shadow">
-                <!-- Product Image -->
-                <div class="relative aspect-w-1 aspect-h-1 group">
-                    <a href="{{ product.get_absolute_url }}">
-                        {% if product.image %}
-                        <img src="{{ product.image.url }}" alt="{{ product.title }}"
-                             class="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-300">
-                        {% endif %}
-                    </a>
-                    <!-- Quick Actions -->
-                    <div class="absolute top-4 right-4 space-y-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                        <button class="w-10 h-10 flex items-center justify-center bg-white rounded-full shadow-md hover:bg-purple-600 hover:text-white transition-colors">
-                            <i class="fas fa-heart"></i>
-                        </button>
-                        <button class="w-10 h-10 flex items-center justify-center bg-white rounded-full shadow-md hover:bg-purple-600 hover:text-white transition-colors">
-                            <i class="fas fa-eye"></i>
-                        </button>
-                    </div>
-                    {% if product.is_special %}
-                    <div class="absolute top-4 left-4">
-                        <span class="bg-red-500 text-white px-3 py-1 rounded-full text-sm">ویژه</span>
-                    </div>
-                    {% endif %}
-                </div>
-
-                <!-- Product Info -->
-                <div class="p-4">
-                    <h3 class="text-lg font-semibold mb-2">
-                        <a href="{{ product.get_absolute_url }}" class="hover:text-purple-600 transition-colors">
-                            {{ product.title }}
+        <div class="flex flex-wrap -mx-4">
+            <!-- Categories Sidebar -->
+            <div class="w-full md:w-1/4 px-4 mb-8">
+                <div class="bg-white rounded-lg shadow-sm p-6">
+                    <h2 class="text-lg font-semibold mb-4">{% trans 'Categories' %}</h2>
+                    <div class="space-y-2">
+                        <a href="{% url 'product_list' %}" 
+                           class="block px-4 py-2 rounded-lg {% if not category %}bg-purple-600 text-white{% else %}hover:bg-gray-50{% endif %} transition-colors">
+                            همه محصولات
                         </a>
-                    </h3>
-                    <div class="flex items-center justify-between mb-4">
-                        <span class="text-purple-600 font-bold">{{ product.price }} {% trans '$' %}</span>
-                        {% if product.old_price %}
-                        <span class="text-gray-400 line-through text-sm">{{ product.old_price }} {% trans '$' %}</span>
-                        {% endif %}
+                        {% for c in categories %}
+                            <a href="{{ c.get_absolute_url }}" 
+                               class="block px-4 py-2 rounded-lg {% if category.slug == c.slug %}bg-purple-600 text-white{% else %}hover:bg-gray-50{% endif %} transition-colors">
+                                {{ c.name }}
+                            </a>
+                        {% endfor %}
                     </div>
-                    
-                    <!-- Add to Cart Form -->
-                    <form action="{% url 'cart:cart_add' product.id %}" method="POST" class="mt-4">
-                        {% csrf_token %}
-                        <input type="hidden" name="quantity" value="1">
-                        <button type="submit" 
-                                class="w-full bg-purple-600 text-white py-2 rounded-lg hover:bg-purple-700 transition-colors">
-                            {% trans 'Add to Cart' %}
-                        </button>
-                    </form>
                 </div>
             </div>
-            {% endfor %}
-        </div>
 
-        <!-- Pagination -->
-        {% if products.has_other_pages %}
-        <div class="flex justify-center mt-12">
-            <nav class="flex items-center space-x-2 space-x-reverse">
-                {% if products.has_previous %}
-                <a href="?page={{ products.previous_page_number }}" 
-                   class="px-4 py-2 bg-white border rounded-lg hover:bg-gray-50 transition-colors">
-                    <i class="fas fa-chevron-right"></i>
-                </a>
+            <!-- Products Grid -->
+            <div class="w-full md:w-3/4 px-4">
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                    {% for product in products|dictsort:"datetime_created" %}
+                    <div class="bg-white rounded-lg shadow-sm overflow-hidden hover:shadow-md transition-shadow">
+                        <!-- Product Image -->
+                        <div class="relative aspect-w-1 aspect-h-1 group">
+                            <a href="{{ product.get_absolute_url }}">
+                                {% if product.image %}
+                                <img src="{{ product.image.url }}" alt="{{ product.title }}"
+                                     class="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-300">
+                                {% endif %}
+                            </a>
+                            <!-- Quick Actions -->
+                            <div class="absolute top-4 right-4 space-y-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                                <button class="w-10 h-10 flex items-center justify-center bg-white rounded-full shadow-md hover:bg-purple-600 hover:text-white transition-colors">
+                                    <i class="fas fa-heart"></i>
+                                </button>
+                                <button class="w-10 h-10 flex items-center justify-center bg-white rounded-full shadow-md hover:bg-purple-600 hover:text-white transition-colors">
+                                    <i class="fas fa-eye"></i>
+                                </button>
+                            </div>
+                            {% if product.is_special %}
+                            <div class="absolute top-4 left-4">
+                                <span class="bg-red-500 text-white px-3 py-1 rounded-full text-sm">ویژه</span>
+                            </div>
+                            {% endif %}
+                        </div>
+
+                        <!-- Product Info -->
+                        <div class="p-4">
+                            <div class="text-sm text-gray-500 mb-2">{{ product.category.name }}</div>
+                            <h3 class="text-lg font-semibold mb-2">
+                                <a href="{{ product.get_absolute_url }}" class="hover:text-purple-600 transition-colors">
+                                    {{ product.title }}
+                                </a>
+                            </h3>
+                            <div class="flex items-center justify-between mb-4">
+                                <span class="text-purple-600 font-bold">{{ product.price|intcomma:False|translate_number }} {% trans '$' %}</span>
+                                {% if product.old_price %}
+                                <span class="text-gray-400 line-through text-sm">{{ product.old_price|intcomma:False|translate_number }} {% trans '$' %}</span>
+                                {% endif %}
+                            </div>
+                            
+                            <!-- Add to Cart Form -->
+                            <form action="{% url 'cart:cart_add' product.id %}" method="POST" class="mt-4">
+                                {% csrf_token %}
+                                <input type="hidden" name="quantity" value="1">
+                                <button type="submit" 
+                                        class="w-full bg-purple-600 text-white py-2 rounded-lg hover:bg-purple-700 transition-colors">
+                                    {% trans 'Add to Cart' %}
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                    {% empty %}
+                    <div class="col-span-full text-center py-12">
+                        <p class="text-gray-500">{% trans 'No products available in this category.' %}</p>
+                    </div>
+                    {% endfor %}
+                </div>
+
+                <!-- Pagination -->
+                {% if products.has_other_pages %}
+                <div class="flex justify-center mt-12">
+                    <nav class="flex items-center space-x-2 space-x-reverse">
+                        {% if products.has_previous %}
+                        <a href="?page={{ products.previous_page_number }}" 
+                           class="px-4 py-2 bg-white border rounded-lg hover:bg-gray-50 transition-colors">
+                            <i class="fas fa-chevron-right"></i>
+                        </a>
+                        {% endif %}
+
+                        {% for num in products.paginator.page_range %}
+                            {% if products.number == num %}
+                            <span class="px-4 py-2 bg-purple-600 text-white rounded-lg">{{ num }}</span>
+                            {% else %}
+                            <a href="?page={{ num }}" 
+                               class="px-4 py-2 bg-white border rounded-lg hover:bg-gray-50 transition-colors">
+                                {{ num }}
+                            </a>
+                            {% endif %}
+                        {% endfor %}
+
+                        {% if products.has_next %}
+                        <a href="?page={{ products.next_page_number }}" 
+                           class="px-4 py-2 bg-white border rounded-lg hover:bg-gray-50 transition-colors">
+                            <i class="fas fa-chevron-left"></i>
+                        </a>
+                        {% endif %}
+                    </nav>
+                </div>
                 {% endif %}
-
-                {% for num in products.paginator.page_range %}
-                    {% if products.number == num %}
-                    <span class="px-4 py-2 bg-purple-600 text-white rounded-lg">{{ num }}</span>
-                    {% else %}
-                    <a href="?page={{ num }}" 
-                       class="px-4 py-2 bg-white border rounded-lg hover:bg-gray-50 transition-colors">
-                        {{ num }}
-                    </a>
-                    {% endif %}
-                {% endfor %}
-
-                {% if products.has_next %}
-                <a href="?page={{ products.next_page_number }}" 
-                   class="px-4 py-2 bg-white border rounded-lg hover:bg-gray-50 transition-colors">
-                    <i class="fas fa-chevron-left"></i>
-                </a>
-                {% endif %}
-            </nav>
+            </div>
         </div>
-        {% endif %}
     </div>
 </div>
 {% endblock %}

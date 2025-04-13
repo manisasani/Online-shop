@@ -9,7 +9,7 @@
     <div class="flex flex-col lg:flex-row gap-8">
         <!-- Cart Items Section -->
         <div class="lg:w-2/3">
-            <h1 class="text-2xl font-bold text-gray-800 mb-6">{% translate 'Shopping Cart' %}</h1>
+            <h1 class="text-2xl font-bold text-gray-800 mb-6">سبد خرید</h1>
             
             {% if cart %}
             <div class="bg-white rounded-xl shadow-sm overflow-hidden">
@@ -115,13 +115,13 @@
                         <button type="submit" 
                                 class="text-red-500 hover:text-red-600 transition-colors">
                             <i class="fas fa-trash-alt mr-2"></i>
-                            {% translate 'Empty Cart' %}
+                            حذف سبد خرید
                         </button>
                     </form>
                     <a href="{% url 'product_list' %}" 
                        class="text-purple-600 hover:text-purple-700 transition-colors">
                         <i class="fas fa-arrow-right ml-2"></i>
-                        {% translate 'Continue Shopping' %}
+                        به خرید ادامه دهید
                     </a>
                 </div>
                 {% endif %}
@@ -168,7 +168,7 @@
                     <a href="{% url 'order_create' %}" 
                        class="w-full inline-flex items-center justify-center px-6 py-3 bg-gradient-to-r from-purple-600 to-purple-700 text-white rounded-xl hover:from-purple-700 hover:to-purple-800 transition-all shine-effect">
                         <i class="fas fa-credit-card ml-2"></i>
-                        {% translate 'Proceed to Checkout' %}
+                        پرداخت کنید
                     </a>
                 </div>
 
